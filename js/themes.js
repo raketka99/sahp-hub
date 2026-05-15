@@ -42,7 +42,7 @@ const THEMES = {
 
   terminal: {
     label: 'Terminál',
-    '--th-bg':            '#f1c232',
+    '--th-bg':            '#000000',
     '--th-bg-panel':      '#05060a',
     '--th-bg-card':       '#080a0f',
     '--th-bg-hover':      'rgba(255,204,0,0.08)',
