@@ -7,76 +7,26 @@
       "icon": "⚔️",
       "laws": [
         {
-          "id": "par7",
-          "number": 7,
-          "title": "§7 Ublížení na zdraví",
-          "description": "Vyhrožování usmrcením, těžkou újmou na zdraví či majetku, takovým způsobem, že to může vzbudit důvodnou obavu druhého",
+          "id": "par243",
+          "number": 243,
+          "title": "§243(a) Ublížení na zdraví",
+          "description": "Trestný zákonník státu San Andreas definuje jakékoli fyzické napadení osoby za účelem způsobení zranění jako Ublížení na zdraví",
           "subs": [
             {
               "label": "a)",
-              "text": "neúmyslně a zbraní – sazba 1–5 let",
+              "text": "1 rok ve vězení - pokuta ve výši 200 $",
               "minJ": 1,
-              "maxJ": 5,
+              "maxJ": 1,
               "isLife": false,
               "hasJ": true,
-              "hasF": false,
+              "hasF": true,
               "fixedFine": null,
               "fixedJail": null,
+              "minF": 200,
+              "maxF": 200,
               "removeZP": false,
               "removeRP": false
             },
-            {
-              "label": "b)",
-              "text": "úmyslně a zbraní – sazba 1–5 let",
-              "minJ": 1,
-              "maxJ": 5,
-              "isLife": false,
-              "hasJ": true,
-              "hasF": false,
-              "fixedFine": null,
-              "fixedJail": null,
-              "removeZP": false,
-              "removeRP": false
-            },
-            {
-              "label": "c)",
-              "text": "úmyslně a zbraní střelnou – sazba 3–10 let",
-              "minJ": 3,
-              "maxJ": 10,
-              "isLife": false,
-              "hasJ": true,
-              "hasF": false,
-              "fixedFine": null,
-              "fixedJail": null,
-              "removeZP": false,
-              "removeRP": false
-            },
-            {
-              "label": "d)",
-              "text": "úmyslně a zbraní proti úřední osobě – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz",
-              "minJ": 5,
-              "maxJ": 15,
-              "isLife": false,
-              "hasJ": true,
-              "hasF": false,
-              "fixedFine": null,
-              "fixedJail": null,
-              "removeZP": true,
-              "removeRP": false
-            },
-            {
-              "label": "e)",
-              "text": "úmyslně a zbraní proti členům záchranných složek při výkonu povolání – odnětím svobody od 10 do 20 let – ODEBRAT Zbrojní Průkaz",
-              "minJ": 10,
-              "maxJ": 20,
-              "isLife": false,
-              "hasJ": true,
-              "hasF": false,
-              "fixedFine": null,
-              "fixedJail": null,
-              "removeZP": true,
-              "removeRP": false
-            }
           ]
         },
         {
