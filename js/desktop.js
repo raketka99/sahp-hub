@@ -86,7 +86,7 @@ const APPS = [
 
 // ── Auth ─────────────────────────────────────────────────────
 const Auth = {
-  KEY: 'saspHub_officer_v1',
+  KEY: 'sahpHub_officer_v1',
   _data: null,
 
   load() {
@@ -162,8 +162,8 @@ const Boot = {
     { text: '[  OK  ] Načítání systémové konfigurace',          cls: 'boot-line-ok',   delay: 850 },
     { text: '[  OK  ] Inicializace souborového systému',        cls: 'boot-line-ok',   delay: 1100 },
     { text: '[  OK  ] Spouštění síťových služeb',               cls: 'boot-line-ok',   delay: 1380 },
-    { text: '[  OK  ] Připojování k SASP dispatch síti',        cls: 'boot-line-ok',   delay: 1650 },
-    { text: '[ INFO ] Načítání aplikační sady SASP...',         cls: 'boot-line-info', delay: 1940 },
+    { text: '[  OK  ] Připojování k SAHP dispatch síti',        cls: 'boot-line-ok',   delay: 1650 },
+    { text: '[ INFO ] Načítání aplikační sady SAHP...',         cls: 'boot-line-info', delay: 1940 },
     { text: '[  OK  ] MDT Terminál               — připraven',  cls: 'boot-line-ok',   delay: 2200 },
     { text: '[  OK  ] Notepad                    — připraven',  cls: 'boot-line-ok',   delay: 2340 },
     { text: '[  OK  ] Kalkulačka                 — připravena', cls: 'boot-line-ok',   delay: 2420 },
@@ -848,9 +848,9 @@ function gridFreeSlot(excludeIds = []) {
 
 // ── Desktop Items (custom folders / text docs on desktop) ─────
 const DesktopItems = {
-  KEY:       'saspHub_desktopItems_v1',
-  NAMES_KEY: 'saspHub_iconNames_v1',
-  POS_KEY:   'saspHub_iconPositions_v1',
+  KEY:       'sahpHub_desktopItems_v1',
+  NAMES_KEY: 'sahpHub_iconNames_v1',
+  POS_KEY:   'sahpHub_iconPositions_v1',
   _items: [],
   _names: {},
   _positions: {},
@@ -1963,7 +1963,7 @@ const ContextMenu = {
 
 // ── Quick Notepad Note ────────────────────────────────────────
 const QuickNote = {
-  STORAGE_KEY: 'saspHub_notepad_v1',
+  STORAGE_KEY: 'sahpHub_notepad_v1',
 
   create(dropX, dropY) {
     // Create the note in Notepad storage
@@ -2000,7 +2000,7 @@ const QuickNote = {
 
 // ── Sticky Notes ─────────────────────────────────────────────
 const StickyNotes = {
-  KEY: 'saspHub_stickies_v1',
+  KEY: 'sahpHub_stickies_v1',
   _notes: [],
   _zBase: 4,
   _zTop: 4,
@@ -2478,7 +2478,7 @@ const TrashWindow = {
 
 // ── Pinned Built-in Apps ────────────────────────────────────
 const PinnedApps = {
-  KEY: 'saspHub_pinnedApps_v1',
+  KEY: 'sahpHub_pinnedApps_v1',
   _hidden: new Set(),
 
   load() {
@@ -2500,7 +2500,7 @@ const PinnedApps = {
 
 // ── Taskbar Pins ──────────────────────────────────────────────
 const TaskbarPins = {
-  KEY: 'saspHub_taskbarPins_v1',
+  KEY: 'sahpHub_taskbarPins_v1',
   _pins: [],
 
   load() {
@@ -3284,9 +3284,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const desktop = document.getElementById('desktop');
     desktop.style.display = 'block';
     Desktop.init();
-  } else if (sessionStorage.getItem('saspHub_skipBoot')) {
+  } else if (sessionStorage.getItem('sahpHub_skipBoot')) {
     // Logged out — skip boot, go straight to login
-    sessionStorage.removeItem('saspHub_skipBoot');
+    sessionStorage.removeItem('sahpHub_skipBoot');
     document.getElementById('bootOverlay').style.display = 'none';
     Login.show();
   } else {
