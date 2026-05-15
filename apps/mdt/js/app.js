@@ -1717,7 +1717,7 @@ const SAHP = (() => {
 
       let out = '';
       out += '════════════════════════════════════════\n';
-      out += '          SASP  PROTOKOL  PŘÍPADU\n';
+      out += '          SAHP  PROTOKOL  PŘÍPADU\n';
       out += '   Datum: ' + dt + '\n';
       out += '════════════════════════════════════════\n';
       out += '\n ZASAHUJÍCÍ STRÁŽNÍK\n';
