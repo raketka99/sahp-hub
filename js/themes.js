@@ -28,7 +28,7 @@ const THEMES = {
     '--th-radius-btn':    '6px',
     '--th-titlebar-bg':   'linear-gradient(180deg, #0f2035 0%, #0c1b2e 100%)',
     '--th-titlebar-border':'#1a3050',
-    '--th-win-bg':        '#0b1622',
+    '--th-win-bg':        '#f1c232',
     '--th-win-border':    '#1e3a5a',
     '--th-btn-bg':        'rgba(59,158,255,0.1)',
     '--th-btn-border':    'rgba(59,158,255,0.3)',
