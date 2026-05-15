@@ -1,7 +1,7 @@
 'use strict';
 
 /* ============================================================
-   SASP HUB OS — Theme Engine
+   SAHP HUB OS — Theme Engine
    Tři témata: modern (výchozí), terminal (zlatočerný), win98
    ============================================================ */
 
@@ -42,7 +42,7 @@ const THEMES = {
 
   terminal: {
     label: 'Terminál',
-    '--th-bg':            '#000000',
+    '--th-bg':            '#f1c232',
     '--th-bg-panel':      '#05060a',
     '--th-bg-card':       '#080a0f',
     '--th-bg-hover':      'rgba(255,204,0,0.08)',
