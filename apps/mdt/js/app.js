@@ -5,7 +5,7 @@
    Modular architecture, localStorage persistence, admin CRUD
    ============================================================ */
 
-const SAHP = (() => {
+const SASP = (() => {
 
   // ── State ─────────────────────────────────────────────────
   let _laws = [];           
@@ -15,7 +15,7 @@ const SAHP = (() => {
 
   // ── Auth ──────────────────────────────────────────────────
   const Auth = {
-    KEY: 'sahp_officer_v1',
+    KEY: 'sasp_officer_v1',
     _data: { badge: '', firstName: '', lastName: '' },
 
     load() {
@@ -105,7 +105,7 @@ const SAHP = (() => {
 
   // ── ProtocolHistory ───────────────────────────────────────
   const ProtocolHistory = {
-    KEY: 'sahp_protocol_history_v1',
+    KEY: 'sasp_protocol_history_v1',
     MAX: 50,
 
     _saveEntry() {
@@ -174,10 +174,10 @@ const SAHP = (() => {
               <div class="history-totals">${_esc(e.totals.jail)} · ${e.totals.fine > 0 ? e.totals.fine.toLocaleString('cs-CZ') + ' $' : '0 $'}</div>
             </div>
             <div class="history-entry-actions">
-              <button class="admin-btn btn-edit" onclick="SAHP.historyView('${e.id}')">ZOBRAZIT</button>
-              <button class="admin-btn btn-load" onclick="SAHP.historyLoad('${e.id}')">NAČÍST</button>
-              <button class="admin-btn btn-dl"   onclick="SAHP.historyDownload('${e.id}')">STÁHNOUT</button>
-              <button class="admin-btn btn-del"  onclick="SAHP.historyDelete('${e.id}')">SMAZAT</button>
+              <button class="admin-btn btn-edit" onclick="SASP.historyView('${e.id}')">ZOBRAZIT</button>
+              <button class="admin-btn btn-load" onclick="SASP.historyLoad('${e.id}')">NAČÍST</button>
+              <button class="admin-btn btn-dl"   onclick="SASP.historyDownload('${e.id}')">STÁHNOUT</button>
+              <button class="admin-btn btn-del"  onclick="SASP.historyDelete('${e.id}')">SMAZAT</button>
             </div>
           </div>`;
       }).join('');
@@ -261,15 +261,15 @@ const SAHP = (() => {
           </div>
         </div>
         ${flagsHtml}
-        <button class="action-btn save-btn hv-copy-btn" onclick="SAHP.historyCopy('${id}')">
+        <button class="action-btn save-btn hv-copy-btn" onclick="SASP.historyCopy('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-copy"></i></span>
           <span class="btn-lbl">ZKOPÍROVAT PROTOKOL</span>
         </button>
-        <button class="action-btn hv-copy-btn" onclick="SAHP.historyDownload('${id}')">
+        <button class="action-btn hv-copy-btn" onclick="SASP.historyDownload('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-file-arrow-down"></i></span>
           <span class="btn-lbl">STÁHNOUT TXT</span>
         </button>
-        <button class="action-btn hv-load-btn" onclick="SAHP.historyLoad('${id}')">
+        <button class="action-btn hv-load-btn" onclick="SASP.historyLoad('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-file-import"></i></span>
           <span class="btn-lbl">NAČÍST DO AKTIVNÍHO PROTOKOLU</span>
         </button>`;
@@ -367,7 +367,7 @@ const SAHP = (() => {
   // Persists the active (unsaved) protocol + suspect fields to localStorage
   // so a page refresh restores the work-in-progress state.
   const Draft = {
-    KEY: 'sahp_mdt_draft_v1',
+    KEY: 'sasp_mdt_draft_v1',
 
     save() {
       try {
@@ -534,7 +534,7 @@ const SAHP = (() => {
     start() {
       // SAHP Hub mode: always auto-login with hub credentials
       try {
-        const stored = localStorage.getItem('sahp_officer_v1');
+        const stored = localStorage.getItem('sasp_officer_v1');
         if (stored) {
           const creds = JSON.parse(stored);
           if (creds.badge && creds.firstName && creds.lastName) {
@@ -597,7 +597,7 @@ const SAHP = (() => {
 
   // ── DataManager ───────────────────────────────────────────
   const Data = {
-    KEY: 'sahp_laws_v3',
+    KEY: 'sasp_laws_v3',
 
     async load() {
       const stored = localStorage.getItem(this.KEY);
@@ -607,7 +607,7 @@ const SAHP = (() => {
           _buildFlat();
           return;
         } catch (e) {
-          console.warn('SAHP: localStorage parse failed, falling back to JSON');
+          console.warn('SASP: localStorage parse failed, falling back to JSON');
         }
       }
       const r = await fetch('data/laws.json?v=' + Date.now());
@@ -748,7 +748,7 @@ const SAHP = (() => {
       : '';
     return `
       <div class="law-item" id="li_${gi}">
-        <div class="law-header" onclick="SAHP.toggleLaw(${gi})">
+        <div class="law-header" onclick="SASP.toggleLaw(${gi})">
           <span>${_esc(law.title)}</span>
           <span class="law-toggle">▼</span>
         </div>
@@ -2398,7 +2398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) {}
 
-  // SASP Hub integration: read credentials from URL params (most reliable)
+  // SAHP Hub integration: read credentials from URL params (most reliable)
   try {
     const _p = new URLSearchParams(location.search);
     const _badge = _p.get('badge'), _first = _p.get('firstName'), _last = _p.get('lastName');
