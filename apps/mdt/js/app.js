@@ -1,11 +1,11 @@
 'use strict';
 
 /* ============================================================
-   SASP MDT — Professional Terminal v3.0
+   SAHP MDT — Professional Terminal v3.0
    Modular architecture, localStorage persistence, admin CRUD
    ============================================================ */
 
-const SASP = (() => {
+const SAHP = (() => {
 
   // ── State ─────────────────────────────────────────────────
   let _laws = [];           
@@ -15,7 +15,7 @@ const SASP = (() => {
 
   // ── Auth ──────────────────────────────────────────────────
   const Auth = {
-    KEY: 'sasp_officer_v1',
+    KEY: 'sahp_officer_v1',
     _data: { badge: '', firstName: '', lastName: '' },
 
     load() {
@@ -105,7 +105,7 @@ const SASP = (() => {
 
   // ── ProtocolHistory ───────────────────────────────────────
   const ProtocolHistory = {
-    KEY: 'sasp_protocol_history_v1',
+    KEY: 'sahp_protocol_history_v1',
     MAX: 50,
 
     _saveEntry() {
@@ -174,10 +174,10 @@ const SASP = (() => {
               <div class="history-totals">${_esc(e.totals.jail)} · ${e.totals.fine > 0 ? e.totals.fine.toLocaleString('cs-CZ') + ' $' : '0 $'}</div>
             </div>
             <div class="history-entry-actions">
-              <button class="admin-btn btn-edit" onclick="SASP.historyView('${e.id}')">ZOBRAZIT</button>
-              <button class="admin-btn btn-load" onclick="SASP.historyLoad('${e.id}')">NAČÍST</button>
-              <button class="admin-btn btn-dl"   onclick="SASP.historyDownload('${e.id}')">STÁHNOUT</button>
-              <button class="admin-btn btn-del"  onclick="SASP.historyDelete('${e.id}')">SMAZAT</button>
+              <button class="admin-btn btn-edit" onclick="SAHP.historyView('${e.id}')">ZOBRAZIT</button>
+              <button class="admin-btn btn-load" onclick="SAHP.historyLoad('${e.id}')">NAČÍST</button>
+              <button class="admin-btn btn-dl"   onclick="SAHP.historyDownload('${e.id}')">STÁHNOUT</button>
+              <button class="admin-btn btn-del"  onclick="SAHP.historyDelete('${e.id}')">SMAZAT</button>
             </div>
           </div>`;
       }).join('');
@@ -261,15 +261,15 @@ const SASP = (() => {
           </div>
         </div>
         ${flagsHtml}
-        <button class="action-btn save-btn hv-copy-btn" onclick="SASP.historyCopy('${id}')">
+        <button class="action-btn save-btn hv-copy-btn" onclick="SAHP.historyCopy('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-copy"></i></span>
           <span class="btn-lbl">ZKOPÍROVAT PROTOKOL</span>
         </button>
-        <button class="action-btn hv-copy-btn" onclick="SASP.historyDownload('${id}')">
+        <button class="action-btn hv-copy-btn" onclick="SAHP.historyDownload('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-file-arrow-down"></i></span>
           <span class="btn-lbl">STÁHNOUT TXT</span>
         </button>
-        <button class="action-btn hv-load-btn" onclick="SASP.historyLoad('${id}')">
+        <button class="action-btn hv-load-btn" onclick="SAHP.historyLoad('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-file-import"></i></span>
           <span class="btn-lbl">NAČÍST DO AKTIVNÍHO PROTOKOLU</span>
         </button>`;
@@ -289,7 +289,7 @@ const SASP = (() => {
 
       let out = '';
       out += '════════════════════════════════════════\n';
-      out += '          SASP  PROTOKOL  PŘÍPADU\n';
+      out += '          SAHP  PROTOKOL  PŘÍPADU\n';
       out += '   Datum: ' + dts + '\n';
       out += '════════════════════════════════════════\n';
       out += '\n ZASAHUJÍCÍ STRÁŽNÍK\n';
@@ -367,7 +367,7 @@ const SASP = (() => {
   // Persists the active (unsaved) protocol + suspect fields to localStorage
   // so a page refresh restores the work-in-progress state.
   const Draft = {
-    KEY: 'sasp_mdt_draft_v1',
+    KEY: 'sahp_mdt_draft_v1',
 
     save() {
       try {
@@ -513,12 +513,12 @@ const SASP = (() => {
   // ── Boot ──────────────────────────────────────────────────
   const Boot = {
     LINES: [
-      { text: 'INITIALIZING  SASP  TERMINAL  OS  v3.2.1 ...', cls: 'title', t: 0 },
+      { text: 'INITIALIZING  SAHP  TERMINAL  OS  v3.2.1 ...', cls: 'title', t: 0 },
       { text: '[SYS]   Loading kernel modules ...', cls: '', t: 280 },
       { text: '[OK]    Kernel loaded successfully', cls: 'ok', t: 560 },
       { text: '[SYS]   Mounting /evidence/database ...', cls: '', t: 840 },
       { text: '[OK]    Volume mounted — 47.2 GB available', cls: 'ok', t: 1100 },
-      { text: '[SYS]   Connecting to SASP Central at 10.0.1.1:5432 ...', cls: '', t: 1400 },
+      { text: '[SYS]   Connecting to SAHP Central at 10.0.1.1:5432 ...', cls: '', t: 1400 },
       { text: '[OK]    Database connection established  [latency: 12ms]', cls: 'ok', t: 1750 },
       { text: '[SYS]   Loading Penal Code v2026.04.01 ...', cls: '', t: 2050 },
       { text: '[OK]    Zákoník načten — 9 kategorií  |  102 paragrafů', cls: 'ok', t: 2380 },
@@ -528,13 +528,13 @@ const SASP = (() => {
       { text: '[SYS]   Starting MDT Evidence Module ...', cls: '', t: 3450 },
       { text: '[OK]    MDT Module ready — all systems operational', cls: 'ok', t: 3720 },
       { text: '', cls: '', t: 3900 },
-      { text: '>>> SASP TERMINAL READY — AUTHENTICATE TO CONTINUE <<<', cls: 'title', t: 4100 },
+      { text: '>>> SAHP TERMINAL READY — AUTHENTICATE TO CONTINUE <<<', cls: 'title', t: 4100 },
     ],
 
     start() {
-      // SASP Hub mode: always auto-login with hub credentials
+      // SAHP Hub mode: always auto-login with hub credentials
       try {
-        const stored = localStorage.getItem('sasp_officer_v1');
+        const stored = localStorage.getItem('sahp_officer_v1');
         if (stored) {
           const creds = JSON.parse(stored);
           if (creds.badge && creds.firstName && creds.lastName) {
@@ -597,7 +597,7 @@ const SASP = (() => {
 
   // ── DataManager ───────────────────────────────────────────
   const Data = {
-    KEY: 'sasp_laws_v3',
+    KEY: 'sahp_laws_v3',
 
     async load() {
       const stored = localStorage.getItem(this.KEY);
@@ -607,7 +607,7 @@ const SASP = (() => {
           _buildFlat();
           return;
         } catch (e) {
-          console.warn('SASP: localStorage parse failed, falling back to JSON');
+          console.warn('SAHP: localStorage parse failed, falling back to JSON');
         }
       }
       const r = await fetch('data/laws.json?v=' + Date.now());
@@ -748,7 +748,7 @@ const SASP = (() => {
       : '';
     return `
       <div class="law-item" id="li_${gi}">
-        <div class="law-header" onclick="SASP.toggleLaw(${gi})">
+        <div class="law-header" onclick="SAHP.toggleLaw(${gi})">
           <span>${_esc(law.title)}</span>
           <span class="law-toggle">▼</span>
         </div>
