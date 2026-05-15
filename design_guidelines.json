@@ -1,0 +1,121 @@
+{
+  "theme_and_archetype": {
+    "domain": "Police Operating System / Cyberpunk Terminal",
+    "theme": "dark",
+    "archetype": "Hybrid: Archetype 4 (Swiss/High-Contrast Government Authority) + Archetype 7 (Electric & Neon)",
+    "description": "A fullscreen web application imitating a futuristic desktop OS for police dispatch/MDT. It blends modern, sleek glassmorphism panels with high-contrast neon accents, maintaining a dark, authoritative environment."
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Rajdhani, sans-serif",
+      "body": "IBM Plex Sans, sans-serif",
+      "mono": "JetBrains Mono, monospace",
+      "retro": "Pixelify Sans, monospace"
+    },
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl font-bold tracking-tight leading-none",
+      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "body": "text-sm sm:text-base leading-relaxed",
+      "terminal_text": "text-sm font-mono tracking-wide",
+      "retro_text": "text-sm font-retro tracking-wide"
+    },
+    "cdn_imports": [
+      "https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@400;500&display=swap"
+    ],
+    "rules": [
+      "Headings in the MDT and Login screen must use Rajdhani with uppercase transformation.",
+      "Terminal logs and data grid rows must use JetBrains Mono.",
+      "Win98 Retro theme must switch to Pixelify Sans or a classic retro font for authenticity."
+    ]
+  },
+  "colors": {
+    "modern_dark": {
+      "background": "#030712",
+      "desktop_overlay": "rgba(3, 7, 18, 0.6)",
+      "window_bg": "rgba(10, 42, 102, 0.2)",
+      "window_border": "rgba(10, 42, 102, 0.5)",
+      "glass_blur": "backdrop-blur-xl",
+      "primary": "#0A2A66",
+      "primary_neon": "#3B82F6",
+      "accent": "#FFD000",
+      "accent_hover": "#FFE066",
+      "text_primary": "#F8FAFC",
+      "text_secondary": "#94A3B8",
+      "success": "#10B981",
+      "danger": "#EF4444",
+      "taskbar_bg": "rgba(3, 7, 18, 0.85)"
+    },
+    "win98_retro": {
+      "background": "#008080",
+      "desktop_overlay": "transparent",
+      "window_bg": "#C0C0C0",
+      "window_border": "#FFFFFF #808080 #808080 #FFFFFF",
+      "glass_blur": "none",
+      "primary": "#000080",
+      "accent": "#FFD000",
+      "text_primary": "#000000",
+      "text_secondary": "#000000",
+      "titlebar_text": "#FFFFFF",
+      "taskbar_bg": "#C0C0C0"
+    }
+  },
+  "media_assets": {
+    "avatars": {
+      "default": "https://static.prod-images.emergentagent.com/jobs/b8777e4c-23aa-470e-ad66-d6b3041b0315/images/2049fcd61ee60cadb52eb496442510ab54d6e72706354416546bfef1fb33f605.png"
+    },
+    "logos": {
+      "sahp_badge": "https://static.prod-images.emergentagent.com/jobs/b8777e4c-23aa-470e-ad66-d6b3041b0315/images/1b0f549b1e2911cfc291917c367ed0858f324f80ff501491a3279ea87bb09a93.png"
+    },
+    "wallpapers": {
+      "modern_dark": "https://static.prod-images.emergentagent.com/jobs/b8777e4c-23aa-470e-ad66-d6b3041b0315/images/2d8ee74ada47da7cd836ccbe3fb731ba3dc52a2a335dfab87a535ba4c613901c.png",
+      "win98_retro": "https://static.prod-images.emergentagent.com/jobs/b8777e4c-23aa-470e-ad66-d6b3041b0315/images/d93d7286afbcfb60ce9f56200f4eae49b924c703ab17dfce14494208b7a4c14d.png"
+    }
+  },
+  "components": {
+    "window_manager": {
+      "description": "Framer Motion based draggable windows (z-index handling, drag constraints, minimize/maximize/close).",
+      "styling": "In modern dark: use 'Crystal Glass' (bg-white/5 or bg-black/40 with backdrop-blur-xl), 1px neon blue border. In Win98: flat #C0C0C0 with outset borders."
+    },
+    "taskbar": {
+      "description": "Bottom fixed bar containing Start button, pinned apps, active windows, system tray (clock).",
+      "styling": "Modern dark: translucent dark bar with neon glow on active tabs. Win98: solid gray, inset borders."
+    },
+    "start_menu": {
+      "description": "Popup launcher above the start button. Contains search input, categories, pinned apps.",
+      "styling": "Dense grid bento layout, blurry background, sharp corners."
+    },
+    "mdt_terminal": {
+      "description": "The centerpiece app. A tactical grid dashboard.",
+      "styling": "Dense bento grid layout (gap-4). Deep black background inside the app. Use JetBrains Mono. Primary buttons should be #FFD000. Incorporate a subtle repeating-linear-gradient for CRT scanlines overlay.",
+      "features": ["Paragraph search", "Criminal code database", "Fines generator", "Person/Vehicle records", "Incidents"]
+    },
+    "desktop_icons": {
+      "description": "Grid-snapping icons. Right-click context menus, double click to open.",
+      "styling": "Transparent buttons, text-shadow for readability over wallpaper."
+    },
+    "boot_screen": {
+      "description": "Initial load sequence simulating a kernel BIOS boot.",
+      "styling": "Pure black background, JetBrains Mono, neon blue or green text, fast typewriter effect."
+    },
+    "login_screen": {
+      "description": "Lock screen displaying avatar, badge num, name, and 'remember me'.",
+      "styling": "Center aligned, heavy blur on background wallpaper, glowing inputs."
+    }
+  },
+  "motion_and_interactions": {
+    "window_drag": "Spring animation (stiffness: 300, damping: 30)",
+    "app_launch": "Scale up from 0.8 and fade in (duration: 0.2s)",
+    "boot_sequence": "Staggered text lines appearing instantly, followed by a fast scrolling effect.",
+    "hover_states": "Interactive elements must have high contrast hover (e.g., bg-blue-900 to bg-blue-700), scale up slightly on desktop icons.",
+    "crt_flicker": "Optional subtle opacity keyframe animation on the MDT terminal container to simulate screen refresh."
+  },
+  "instructions_to_main_agent": {
+    "language": "All UI text must be in Czech language as requested.",
+    "technical_stack": "React, TailwindCSS, Framer Motion, lucide-react (icons).",
+    "theme_system": "Implement a global context or Zustand store to toggle between 'modern' and 'retro' themes. This should dynamically swap Tailwind classes or CSS variables.",
+    "testing": "All interactive elements, buttons, window controls, and form inputs MUST include 'data-testid' attributes in kebab-case.",
+    "icons": "Use 'lucide-react' for system icons (close, min, max, file, folder, app icons).",
+    "data_persistence": "Use localStorage for Sticky Notes content, wallpaper preferences, and current theme."
+  }
+}
