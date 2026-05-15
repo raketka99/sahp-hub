@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 /* ============================================================
-   SASP HUB OS — Desktop Environment
+   SAHP HUB OS — Desktop Environment
    ============================================================ */
 
 // ── Responsive Scale System ──────────────────────────────────
@@ -156,7 +156,7 @@ const Clock = {
 // ── Boot ─────────────────────────────────────────────────────
 const Boot = {
   LINES: [
-    { text: 'SASP HUB OS  v1.0.0',                             cls: 'boot-line-title', delay: 0   },
+    { text: 'SAHP HUB OS  v1.0.0',                             cls: 'boot-line-title', delay: 0   },
     { text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', cls: 'boot-line-sep',   delay: 200 },
     { text: '[  OK  ] Spouštění jádra systému',                 cls: 'boot-line-ok',   delay: 550 },
     { text: '[  OK  ] Načítání systémové konfigurace',          cls: 'boot-line-ok',   delay: 850 },
@@ -491,7 +491,7 @@ class WindowManager {
         zIndex:    parseInt(el.style.zIndex) || 100
       };
     }
-    try { sessionStorage.setItem('saspHub_openWindows_v1', JSON.stringify(state)); } catch(e) {}
+    try { sessionStorage.setItem('sahpHub_openWindows_v1', JSON.stringify(state)); } catch(e) {}
   }
 
   _restoreState() {
@@ -549,9 +549,9 @@ const System = {
   logout() {
     localStorage.removeItem(Auth.KEY);
     sessionStorage.removeItem(Auth.KEY);
-    sessionStorage.removeItem('saspHub_openWindows_v1');
+    sessionStorage.removeItem('sahpHub_openWindows_v1');
     Auth._data = null;
-    sessionStorage.setItem('saspHub_skipBoot', '1');
+    sessionStorage.setItem('sahpHub_skipBoot', '1');
     location.reload();
   },
 
@@ -705,9 +705,9 @@ const ThemeSettings = {
 
 // ── Wallpaper Settings ────────────────────────────────────────
 const WallpaperSettings = {
-  KEY: 'saspHub_wallpaper_v1',
+  KEY: 'sahpHub_wallpaper_v1',
 
-  DEFAULT_BG: 'assets/sasp_logo.png',
+  DEFAULT_BG: 'assets/sahp_logo.png',
 
   applyFromStorage() {
     try {
@@ -771,7 +771,7 @@ const WallpaperSettings = {
         box.style.backgroundSize     = '30%';
         box.style.backgroundPosition = 'center';
         box.style.backgroundRepeat   = 'no-repeat';
-        if (label) label.textContent = 'V\u00fdchoz\u00ed tapeta (SASP)';
+        if (label) label.textContent = 'V\u00fdchoz\u00ed tapeta (SAHP)';
       }
     } catch (e) {}
   },
