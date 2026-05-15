@@ -54,7 +54,7 @@ const THEMES = {
     '--th-text-dim':      '#444',
     '--th-border':        '#151820',
     '--th-border-bright': '#252830',
-    '--th-font':          "'JetBrains Mono', 'Courier New', monospace",
+    '--th-font':          "'Inter', sans-serif",
     '--th-radius-sm':     '2px',
     '--th-radius-md':     '2px',
     '--th-radius-lg':     '3px',
@@ -110,7 +110,7 @@ const THEMES = {
 };
 
 const ThemeEngine = {
-  KEY: 'saspHub_theme_v1',
+  KEY: 'sahpHub_theme_v1',
 
   applyTheme(id) {
     const theme = THEMES[id];
