@@ -1,7 +1,7 @@
 'use strict';
 
 /* ============================================================
-   SAHP HUB OS — Theme Engine
+   SASP HUB OS — Theme Engine
    Tři témata: modern (výchozí), terminal (zlatočerný), win98
    ============================================================ */
 
@@ -28,7 +28,7 @@ const THEMES = {
     '--th-radius-btn':    '6px',
     '--th-titlebar-bg':   'linear-gradient(180deg, #0f2035 0%, #0c1b2e 100%)',
     '--th-titlebar-border':'#1a3050',
-    '--th-win-bg':        '#f1c232',
+    '--th-win-bg':        '#0b1622',
     '--th-win-border':    '#1e3a5a',
     '--th-btn-bg':        'rgba(59,158,255,0.1)',
     '--th-btn-border':    'rgba(59,158,255,0.3)',
@@ -54,7 +54,7 @@ const THEMES = {
     '--th-text-dim':      '#444',
     '--th-border':        '#151820',
     '--th-border-bright': '#252830',
-    '--th-font':          "'Inter', sans-serif",
+    '--th-font':          "'JetBrains Mono', 'Courier New', monospace",
     '--th-radius-sm':     '2px',
     '--th-radius-md':     '2px',
     '--th-radius-lg':     '3px',
@@ -110,7 +110,7 @@ const THEMES = {
 };
 
 const ThemeEngine = {
-  KEY: 'sahpHub_theme_v1',
+  KEY: 'saspHub_theme_v1',
 
   applyTheme(id) {
     const theme = THEMES[id];
