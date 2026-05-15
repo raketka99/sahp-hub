@@ -707,7 +707,7 @@ const ThemeSettings = {
 const WallpaperSettings = {
   KEY: 'sahpHub_wallpaper_v1',
 
-  DEFAULT_BG: 'assets/sahp4.png',
+  DEFAULT_BG: 'assets/sahp_logo.png',
 
   applyFromStorage() {
     try {
