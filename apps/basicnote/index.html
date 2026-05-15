@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poznámka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <script src="../../js/themes.js"></script>
+  <style>
+    :root {
+      --th-bg:         #060f18;
+      --th-bg-panel:   #07101c;
+      --th-accent:     #3b9eff;
+      --th-accent-rgb: 59,158,255;
+      --th-text:       #d0e8ff;
+      --th-text-mid:   #8ab8d8;
+      --th-text-dim:   #3a6080;
+      --th-border:     #1a3050;
+      --th-font:       'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      background: var(--th-bg-panel);
+      color: var(--th-text);
+      font-family: var(--th-font);
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Toolbar ── */
+    #toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      background: var(--th-bg);
+      border-bottom: 1px solid var(--th-border);
+      flex-shrink: 0;
+    }
+
+    #toolbar select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--th-border);
+      border-radius: 4px;
+      color: var(--th-text-mid);
+      font-family: var(--th-font);
+      font-size: 11px;
+      padding: 3px 6px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    #toolbar select:focus { border-color: rgba(var(--th-accent-rgb),0.5); }
+
+    .tb-btn {
+      width: 26px; height: 26px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      color: var(--th-text-dim);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-family: var(--th-font);
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+      flex-shrink: 0;
+    }
+    .tb-btn:hover  { background: rgba(255,255,255,0.07); color: var(--th-text-mid); border-color: rgba(255,255,255,0.08); }
+    .tb-btn.active { background: rgba(var(--th-accent-rgb),0.14); border-color: rgba(var(--th-accent-rgb),0.3); color: var(--th-accent); }
+
+    .tb-sep { width: 1px; height: 18px; background: var(--th-border); margin: 0 2px; flex-shrink: 0; }
+
+    #saveStatus {
+      margin-left: auto;
+      font-size: 10px; letter-spacing: 0.8px;
+      color: var(--th-text-dim);
+      transition: color 0.3s;
+    }
+    #saveStatus.saved   { color: #00e5a0; }
+    #saveStatus.unsaved { color: #ffaa33; }
+
+    /* ── Textarea ── */
+    #pad {
+      flex: 1;
+      width: 100%;
+      background: var(--th-bg-panel);
+      color: var(--th-text);
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      padding: 14px 18px;
+      tab-size: 4;
+    }
+
+    #pad::placeholder { color: var(--th-text-dim); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--th-border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<div id="toolbar">
+  <select id="fontSel" title="Písmo">
+    <option value="mono">Monospace</option>
+    <option value="sans">Sans-serif</option>
+  </select>
+  <select id="sizeSel" title="Velikost">
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13" selected>13</option>
+    <option value="14">14</option>
+    <option value="16">16</option>
+    <option value="18">18</option>
+  </select>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" id="wrapBtn" title="Zalamování řádků">⏎</button>
+  <button class="tb-btn" id="clearBtn" title="Smazat vše">🗑</button>
+  <span id="saveStatus">—</span>
+</div>
+
+<textarea id="pad" placeholder="Začni psát…" spellcheck="false"></textarea>
+
+<script>
+  // ── Resolve doc ID from URL param ─────────────────────────
+  const params = new URLSearchParams(location.search);
+  const docId  = params.get('docId') || 'basicnote_default';
+  const STORE_KEY = 'saspHub_basicnote_' + docId;
+
+  const pad         = document.getElementById('pad');
+  const saveStatus  = document.getElementById('saveStatus');
+  const fontSel     = document.getElementById('fontSel');
+  const sizeSel     = document.getElementById('sizeSel');
+  const wrapBtn     = document.getElementById('wrapBtn');
+  const clearBtn    = document.getElementById('clearBtn');
+
+  // ── Fonts ─────────────────────────────────────────────────
+  const FONTS = {
+    mono: "'JetBrains Mono', 'Courier New', monospace",
+    sans: "'Inter', sans-serif"
+  };
+
+  fontSel.addEventListener('change', () => {
+    pad.style.fontFamily = FONTS[fontSel.value];
+  });
+
+  sizeSel.addEventListener('change', () => {
+    pad.style.fontSize = sizeSel.value + 'px';
+  });
+
+  // ── Word wrap toggle ───────────────────────────────────────
+  let wrapped = true;
+  wrapBtn.classList.add('active');
+  wrapBtn.addEventListener('click', () => {
+    wrapped = !wrapped;
+    pad.style.whiteSpace  = wrapped ? 'pre-wrap' : 'pre';
+    pad.style.overflowX   = wrapped ? 'hidden'   : 'auto';
+    wrapBtn.classList.toggle('active', wrapped);
+  });
+
+  // ── Clear ─────────────────────────────────────────────────
+  clearBtn.addEventListener('click', () => {
+    if (pad.value && !confirm('Smazat celý obsah?')) return;
+    pad.value = '';
+    markUnsaved();
+    save();
+  });
+
+  // ── Load / Save ───────────────────────────────────────────
+  function markUnsaved() {
+    saveStatus.textContent = 'Neuloženo';
+    saveStatus.className   = 'unsaved';
+  }
+  function markSaved() {
+    saveStatus.textContent = 'Uloženo';
+    saveStatus.className   = 'saved';
+    setTimeout(() => {
+      if (saveStatus.className === 'saved') {
+        saveStatus.textContent = '—';
+        saveStatus.className   = '';
+      }
+    }, 2000);
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, pad.value);
+      markSaved();
+    } catch(e) {}
+  }
+
+  function load() {
+    try {
+      const v = localStorage.getItem(STORE_KEY);
+      pad.value = v || '';
+      saveStatus.textContent = '—';
+    } catch(e) {}
+  }
+
+  load();
+
+  let saveTimer;
+  pad.addEventListener('input', () => {
+    markUnsaved();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 800);
+  });
+
+  // Ctrl+S
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      save();
+    }
+  });
+
+  // ── Theme sync from parent hub ────────────────────────────
+  window.addEventListener('message', e => {
+    if (e.data?.type === 'theme' && e.data.vars) {
+      const root = document.documentElement.style;
+      Object.entries(e.data.vars).forEach(([k, v]) => root.setProperty(k, v));
+    }
+  });
+</script>
+</body>
+</html>

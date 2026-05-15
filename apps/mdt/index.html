@@ -1,0 +1,553 @@
+﻿<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SASP MDT — Penal Code Terminal</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body>
+    <!-- ══ LOGIN OVERLAY (hidden — used only for standalone mode) ══ -->
+    <div id="loginOverlay" style="display: none">
+      <div class="crt-overlay"></div>
+
+      <!-- top warning stripe -->
+      <div class="login-stripe login-stripe--top">
+        <div class="login-stripe-track">
+          <span
+            >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp;</span
+          >
+          <span aria-hidden="true"
+            >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp;</span
+          >
+        </div>
+      </div>
+
+      <div class="login-content">
+        <!-- HUD corner brackets -->
+        <div class="hud-corner hud-tl"></div>
+        <div class="hud-corner hud-tr"></div>
+        <div class="hud-corner hud-bl"></div>
+        <div class="hud-corner hud-br"></div>
+
+        <!-- header row -->
+        <div class="login-header-row">
+          <!-- shield badge -->
+          <div class="login-shield">
+            <img src="assets/sasp_logo.png" alt="SASP" />
+          </div>
+
+          <div class="login-titles">
+            <div class="login-dept">SAN ANDREAS STATE POLICE</div>
+            <h1 class="login-title" data-text="MDT TERMINÁL">MDT TERMINÁL</h1>
+            <div class="login-version">
+              MOBILE DATA TERMINAL · OS v3.2.1 · CLASSIFIED
+            </div>
+          </div>
+        </div>
+
+        <!-- status bar -->
+        <div class="login-status-bar">
+          <div class="lst-item lst-green">
+            <span class="lst-dot"></span>SÍŤOVÉ PŘIPOJENÍ: AKTIVNÍ
+          </div>
+          <div class="lst-item lst-green">
+            <span class="lst-dot"></span>ŠIFROVÁNÍ: AES-256
+          </div>
+          <div class="lst-item lst-yellow">
+            <span class="lst-dot"></span>PŘÍSTUP: OMEZENÝ
+          </div>
+          <div class="lst-item lst-red">
+            <span class="lst-dot"></span>ZÁZNAM AKTIVIT: ZAPNUT
+          </div>
+        </div>
+
+        <!-- credential box -->
+        <div class="login-cred-box">
+          <div class="cred-row">
+            <label class="cred-label" for="loginBadge">BADGE NO.</label>
+            <input class="cred-input cred-editable" id="loginBadge" type="text" placeholder="SASP-0000" autocomplete="off" spellcheck="false" />
+          </div>
+          <div class="cred-row">
+            <label class="cred-label" for="loginFirstName">JMÉNO</label>
+            <input class="cred-input cred-editable" id="loginFirstName" type="text" placeholder="Jméno" autocomplete="off" spellcheck="false" />
+          </div>
+          <div class="cred-row">
+            <label class="cred-label" for="loginLastName">PŘÍJMENÍ</label>
+            <input class="cred-input cred-editable" id="loginLastName" type="text" placeholder="Příjmení" autocomplete="off" spellcheck="false" />
+          </div>
+          <div class="cred-row">
+            <label class="cred-label">HESLO</label>
+            <input class="cred-input cred-password" id="loginPassword" type="text" placeholder="*******" readonly autocomplete="off" />
+          </div>
+        </div>
+
+        <button id="loginBtn" class="login-btn">
+          <span class="btn-icon"
+            ><i class="fa-solid fa-right-to-bracket"></i
+          ></span>
+          <span class="btn-text">AUTORIZOVAT A VSTOUPIT</span>
+        </button>
+
+        <div class="login-footer">
+          <span>© 2026 SASP · EVIDENCE SYSTEM</span>
+          <span class="lf-sep">|</span>
+          <span>NATHANIEL HARTMAN</span>
+          <span class="lf-sep">|</span>
+          <span class="lf-warn">NEOPRÁVNĚNÝ PŘÍSTUP JE TRESTNÝ ČIN</span>
+          <div class="lf-break"></div>
+          <button class="lf-link" id="loginAboutBtn">O APLIKACI</button>
+          <span class="lf-sep">·</span>
+          <button class="lf-link" id="loginHelpBtn">NÁPOVĚDA</button>
+        </div>
+      </div>
+
+      <!-- bottom warning stripe -->
+      <div class="login-stripe login-stripe--bot">
+        <div class="login-stripe-track">
+          <span
+            >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp;</span
+          >
+          <span aria-hidden="true"
+            >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp;</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ WELCOME OVERLAY ══════════════════════════════════════ -->
+    <div id="welcomeOverlay" style="display: none">
+      <div id="welcomeText" class="welcome-text"></div>
+    </div>
+
+    <!-- ══ MAIN APP ════════════════════════════════════════════ -->
+    <div id="mainApp" style="display: none">
+      <div class="crt-overlay"></div>
+      <div class="user-bar">PŘIHLÁŠENÝ UŽIVATEL:&nbsp;<span class="welcome-bracket">[</span><span id="loggedUserName">—</span><span class="welcome-bracket">]</span>
+        <!-- 
+        <button id="logoutBtn" class="logout-btn" title="Odhlásit se"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;ODHLÁSIT</button>
+        -->
+      </div>
+
+      <div class="app-panels">
+        <!-- LEFT PANEL -->
+        <div id="leftPanel">
+          <div class="panel-header">
+            <div class="header-brand">
+              <img src="assets/sasp_logo.png" alt="SASP" class="brand-logo" />
+              <span>TRESTNÍ ZÁKONÍK — SAN ANDREAS</span>
+            </div>
+            <div class="header-controls">
+              <button
+                class="admin-trigger"
+                id="settingsBtn"
+                title="Nastavení"
+              >
+                <i class="fa-solid fa-sliders"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="helpBtn"
+                title="Nápověda"
+              >
+                <i class="fa-solid fa-circle-question"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="aboutBtn"
+                title="O aplikaci"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="changelogBtn"
+                title="Změny v této verzi"
+              >
+              <i class="fa-solid fa-code-compare"></i>              
+              </button>
+              <!--
+              <button
+                class="admin-trigger"
+                id="themeBtn"
+                title="Přepnout téma"
+              >
+                <i class="fa-solid fa-palette"></i>
+              </button>
+              -->
+              <button
+                class="admin-trigger"
+                id="adminBtn"
+                title="Admin panel (Ctrl+Shift+A)"
+              >
+                <i class="fa-solid fa-gear"></i>
+              </button>
+            </div>
+              <div class="header-status">
+                <span class="status-dot"></span>ONLINE
+              </div>
+          </div>
+
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Hledat paragraf nebo klíčové slovo..."
+              autocomplete="off"
+            />
+            <span class="search-count" id="searchCount"></span>
+          </div>
+
+          <div class="category-tabs" id="categoryTabs"></div>
+
+          <div id="lawsContainer" class="laws-container"></div>
+        </div>
+
+        <!-- RESIZE HANDLE -->
+        <div id="panelResizer"></div>
+
+        <!-- RIGHT PANEL -->
+        <div id="rightPanel">
+          <div class="protocol-header">
+            <div class="protocol-title">
+              <i class="fa-solid fa-clipboard"></i>PROTOKOL PŘÍPADU
+            </div>
+            <div id="caseTime" class="case-time"></div>
+          </div>
+
+          <div id="courtAlert" class="court-alert" style="display: none">
+            <i class="fa-solid fa-scale-balanced"></i>PŘÍTOMNOST STÁTNÍHO
+            ZÁSTUPCE NUTNÁ
+          </div>
+
+          <!-- SUSPECT FORM -->
+          <div id="suspectForm" class="suspect-form">
+            <div class="suspect-form-title">IDENTITA SUSPECTA</div>
+            <div class="suspect-row">
+              <div class="suspect-field">
+                <label class="suspect-label" for="suspectFirst">JMÉNO</label>
+                <input class="suspect-input" id="suspectFirst" type="text" placeholder="Jméno" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="suspect-field">
+                <label class="suspect-label" for="suspectLast">PŘÍJMENÍ</label>
+                <input class="suspect-input" id="suspectLast" type="text" placeholder="Příjmení" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="suspect-field suspect-birth">
+                <label class="suspect-label" for="suspectBirth">DATUM NAROZENÍ</label>
+                <input class="suspect-input" id="suspectBirth" type="text" placeholder="DD.MM.RRRR" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
+          </div>
+
+          <div id="caseEntries" class="case-entries"></div>
+
+          <div class="protocol-footer">
+            <div class="totals-row">
+              <div class="total-item">
+                <span class="total-label">VAZBA</span>
+                <span id="sumJail" class="total-value jail-color">0 LET</span>
+              </div>
+              <span class="total-divider">|</span>
+              <div class="total-item">
+                <span class="total-label">POKUTY</span>
+                <span id="sumFine" class="total-value fine-color">0 $</span>
+              </div>
+            </div>
+            <div class="footer-actions">
+              <button id="saveAndCopyBtn" class="action-btn save-btn btn-disabled" disabled>
+                <span class="btn-ic"><i class="fa-solid fa-floppy-disk"></i></span>
+                <span class="btn-lbl">ULOŽIT A ZKOPÍROVAT</span>
+              </button>
+              <div class="footer-actions-row">
+                <button id="historyBtn" class="action-btn history-btn">
+                  <span class="btn-ic"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                  <span class="btn-lbl">HISTORIE</span>
+                </button>
+              </div>
+               <div class="footer-actions-row">
+                <button id="clearBtn" class="action-btn clear-btn">
+                  <span class="btn-ic"><i class="fa-solid fa-trash-can"></i></span>
+                  <span class="btn-lbl">NOVÝ PŘÍPAD</span>
+                </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /#rightPanel -->
+      </div>
+      <!-- /.app-panels -->
+    </div>
+    <!-- /#mainApp -->
+
+    <!-- ══ CHARGE INPUT MODAL ════════════════════════════════ -->
+    <div id="chargeOverlay" style="display: none">
+      <div class="charge-modal">
+        <div class="charge-modal-header">
+          <div class="charge-modal-heading">
+            <div class="charge-modal-title" id="cm_lawTitle"></div>
+            <div class="charge-modal-sub" id="cm_subLabel"></div>
+          </div>
+          <button id="cm_close" class="admin-close">✕</button>
+        </div>
+        <div class="charge-modal-body">
+          <div id="cm_badges" class="card-badges cm-badges"></div>
+          <div id="cm_inputs" class="cm-inputs"></div>
+        </div>
+        <div class="charge-modal-footer">
+          <button id="cm_confirm" class="cm-confirm-btn">PŘIDAT DO PROTOKOLU</button>
+          <button id="cm_cancel" class="cm-cancel-btn">ZRUŠIT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VALIDATION MODAL ════════════════════════════════════ -->
+    <div id="modalOverlay" style="display: none" tabindex="-1">
+      <div class="modal-box">
+        <div class="modal-step" id="modalStep">KONTROLA ZÁKONNOSTI</div>
+        <div class="modal-icon" id="modalIcon">
+          <i class="fa-solid fa-ban"></i>
+        </div>
+        <div class="modal-title" id="modalTitle">OZNÁMENÍ</div>
+        <div class="modal-msg" id="modalMsg"></div>
+        <div class="modal-actions">
+          <button id="modalYes" class="modal-btn modal-yes">
+            ANO, POKRAČOVAT
+          </button>
+          <button id="modalNo" class="modal-btn modal-no">NE, ZPĚT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INPUT DIALOG ════════════════════════════════════════ -->
+    <div id="inputDialogOverlay" style="display: none" tabindex="-1">
+      <div class="modal-box modal-box--input">
+        <div class="modal-step" id="idStep"></div>
+        <div class="modal-title" id="idTitle"></div>
+        <div class="modal-msg" id="idMsg"></div>
+        <div id="idFields" class="modal-input-fields"></div>
+        <div class="modal-actions">
+          <button id="idConfirm" class="modal-btn modal-yes modal-yes--accent">POTVRDIT</button>
+          <button id="idCancel"  class="modal-btn modal-no">ZRUŠIT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN MODAL ═════════════════════════════════════════ -->
+    <div id="adminOverlay" style="display: none">
+      <div class="admin-modal">
+        <div class="admin-header">
+          <span>⚙ ADMIN PANEL — SPRÁVA ZÁKONŮ</span>
+          <button id="adminClose" class="admin-close">✕</button>
+        </div>
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="laws">Správa zákonů</button>
+          <button class="admin-tab" data-tab="export">Export / Import</button>
+        </div>
+        <div id="adminContent" class="admin-content"></div>
+      </div>
+    </div>
+
+    <!-- ══ HISTORY MODAL ═══════════════════════════════════════ -->
+    <div id="historyOverlay" style="display: none">
+      <div class="history-modal">
+        <div class="history-header">
+          <span><i class="fa-solid fa-clock-rotate-left"></i>&nbsp; ARCHIV PROTOKOLŮ</span>
+          <button id="historyClose" class="admin-close">✕</button>
+        </div>
+        <div class="history-content">
+          <div id="historyListWrap">
+            <div id="historyListContent"></div>
+          </div>
+          <div id="historyDetail" style="display: none">
+            <button class="history-back-btn" onclick="SASP.historyBack()"><i class="fa-solid fa-arrow-left"></i>&nbsp; ZPĚT NA SEZNAM</button>
+            <div id="historyDetailContent" class="history-detail-view"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ABOUT MODAL ════════════════════════════════════════ -->
+    <div id="aboutOverlay" style="display: none">
+      <div class="info-modal info-modal--narrow">
+        <div class="info-modal-header">
+          <span><i class="fa-solid fa-circle-info"></i>&nbsp; O APLIKACI</span>
+          <button id="aboutClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body about-body">
+          <div class="about-shield">
+            <img src="assets/sasp_logo.png" alt="SASP" />
+          </div>
+          <div class="about-title">SASP MDT</div>
+          <div class="about-sub">Penal Code Terminal</div>
+          <div class="about-version">OS v3.2.1 · Zákoník 2026.1</div>
+          <div class="about-desc">
+            Nástroj pro správu trestních protokolů na GenK FiveM RP.
+            Umožňuje vyhledávání v trestním zákoníku, sestavování protokolů k případu,
+            ukládání do historie a kopírování do schránky.
+          </div>
+          <div class="about-authors-title">AUTOŘI</div>
+          <div class="about-authors">
+            <a class="about-author-link" href="https://github.com/MMaverick149" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-github"></i> MMaverick149
+            </a>
+            <a class="about-author-link" href="https://github.com/AnakUn69" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-github"></i> AnakUn
+            </a>
+          </div>
+          <div class="about-madewith">
+            <span class="about-madewith-label">Made with</span>
+            <img src="assets/heddiL.webp" alt="heddiL" class="about-madewith-img" />
+          </div>
+          <div class="about-footer">© 2026 SASP · San Andreas State Police · Všechna práva vyhrazena</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HELP MODAL ═════════════════════════════════════════ -->
+    <div id="helpOverlay" style="display: none">
+      <div class="info-modal">
+        <div class="info-modal-header info-modal-header--help">
+          <span><i class="fa-solid fa-circle-question"></i>&nbsp; NÁPOVĚDA</span>
+          <button id="helpClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body help-body">
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-magnifying-glass"></i> Základní ovládání</div>
+            <div class="help-section-content">
+              <p>V levém panelu se nachází <strong>trestní zákoník</strong> rozdělený do kategorií. Pomocí záložek nebo <strong>vyhledávacího pole</strong> filtrujte paragrafy.</p>
+              <p>Rozbalte zákon kliknutím na jeho název. <strong>Kliknutím kdekoliv na řádek sub-položky</strong> se okamžitě otevře modal pro zadání trestu — není potřeba hledat žádné tlačítko.</p>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-clipboard"></i> Protokol případu</div>
+            <div class="help-section-content">
+              <p>V pravém panelu nejprve vyplňte <strong>identitu suspecta</strong> (jméno, příjmení, datum narození). Přidané paragrafy se zobrazují jako karty — délku trestu a pokutu lze editovat přímo v kartě.</p>
+              <p>Tlačítko <strong>ULOŽIT A ZKOPÍROVAT</strong> se aktivuje automaticky, jakmile jsou splněny všechny podmínky:</p>
+              <ul class="help-list">
+                <li>Protokol obsahuje alespoň jeden záznam</li>
+                <li>Vyplněno jméno, příjmení a datum narození suspecta</li>
+                <li>Žádná zadaná hodnota trestu nebo pokuty není mimo povolený rozsah</li>
+              </ul>
+              <p>Po uložení se protokol zapíše do <strong>HISTORIE</strong> a naformátovaný text se zkopíruje do schránky.</p>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Historie protokolů</div>
+            <div class="help-section-content">
+              <p>Minulé protokoly jsou přístupné přes tlačítko <strong>HISTORIE</strong> v pravém panelu. Maximum uložených protokolů je <strong>50</strong>. Každý záznam lze zobrazit v detailu nebo zkopírovat do schránky.</p>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-gear"></i> Admin panel <span class="help-shortcut">Ctrl+Shift+A</span></div>
+            <div class="help-section-content">
+              <p>Admin panel otevřete tlačítkem <i class="fa-solid fa-gear" style="color:var(--accent)"></i> v levém panelu nebo zkratkou <strong>Ctrl+Shift+A</strong>.</p>
+              <ul class="help-list">
+                <li><strong>Správa zákonů</strong> — přidávání, editace a mazání paragrafů a jejich sub-položek. Tlačítko <i class="fa-solid fa-plus" style="color:var(--fine)"></i> v záhlaví kategorie přidá nový zákon, tlačítko <i class="fa-solid fa-plus" style="color:var(--fine)"></i> vedle názvu zákona přidá novou sub-položku.</li>
+                <li><strong>Export / Import</strong> — stažení zákoníku jako <code>laws.json</code>, import vlastního souboru nebo reset na výchozí data.</li>
+                <li><strong>Nastavení</strong> — přeskočení boot sekvence a automatické přihlášení (dostupné také přes tlačítko <i class="fa-solid fa-sliders" style="color:var(--info)"></i> v hlavním panelu).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-database"></i> Lokální úložiště (localStorage)</div>
+            <div class="help-section-content">
+              <p>Aplikace ukládá veškerá data lokálně v prohlížeči — žádná data se neodesílají na server.</p>
+              <ul class="help-list">
+                <li><code>sasp_officer_v1</code> — přihlašovací údaje strážníka (badge, jméno)</li>
+                <li><code>sasp_laws_v3</code> — upravený zákoník (pokud byl editován v admin panelu)</li>
+                <li><code>sasp_protocol_history_v1</code> — uložené protokoly (max. 50)</li>
+                <li><code>sasp_settings_v1</code> — nastavení spouštění (skipIntro, skipLogin)</li>
+              </ul>
+              <p>Pro smazání dat otevřete <strong>Nástroje pro vývojáře</strong> (F12) → záložka <strong>Application</strong> → <strong>Local Storage</strong> a odstraňte příslušné klíče. Nebo použijte <strong>Reset na výchozí</strong> v Admin panelu → Export/Import.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ QUICK SETTINGS MODAL ══════════════════════════════ -->
+    <div id="settingsOverlay" style="display: none">
+      <div class="info-modal info-modal--narrow">
+        <div class="info-modal-header info-modal-header--settings">
+          <span><i class="fa-solid fa-sliders"></i>&nbsp; NASTAVENÍ</span>
+          <button id="settingsClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body" id="settingsModalBody"></div>
+      </div>
+    </div>
+
+    <!-- ══ README MODAL ════════════════════════════════════════ -->
+    <div id="readmeOverlay" style="display: none">
+      <div class="info-modal info-modal--readme">
+        <div class="info-modal-header info-modal-header--readme">
+          <span><i class="fa-solid fa-list-check"></i>&nbsp; DOKUMENTACE</span>
+          <button id="readmeClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body readme-body">
+          <div id="readmeContent" class="readme-content">
+            <div class="readme-loading"><i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Načítám&hellip;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TOAST ═══════════════════════════════════════════════ -->
+    <div id="toast" class="toast"></div>
+
+    <script src="../../js/themes.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

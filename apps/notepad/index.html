@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notepad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
+  <style>
+    /* ── Hub theme variable defaults (overridden by themes.js) ── */
+    :root {
+      --th-bg:         #060f18;
+      --th-bg-panel:   #07101c;
+      --th-bg-card:    #0b1622;
+      --th-bg-hover:   rgba(59,158,255,0.08);
+      --th-accent:     #3b9eff;
+      --th-accent-dim: rgba(59,158,255,0.15);
+      --th-accent-rgb: 59,158,255;
+      --th-text:       #d0e8ff;
+      --th-text-mid:   #8ab8d8;
+      --th-text-dim:   #3a6080;
+      --th-border:     #1a3050;
+      --th-border-bright: #2a4870;
+      --th-font:       'Inter', sans-serif;
+      --th-radius-sm:  4px;
+      --th-radius-md:  6px;
+      --th-btn-bg:     rgba(59,158,255,0.1);
+      --th-btn-border: rgba(59,158,255,0.3);
+      --th-btn-color:  #3b9eff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100vh;
+      background: var(--th-bg-panel);
+      color: var(--th-text);
+      font-family: var(--th-font);
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══ SIDEBAR ════════════════════════════════════════════ */
+    #sidebar {
+      width: 200px;
+      background: var(--th-bg);
+      border-right: 1px solid var(--th-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    #sidebarTitle {
+      padding: 12px 14px 10px;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 3px; color: var(--th-text-dim);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--th-border);
+      flex-shrink: 0;
+    }
+
+    #notesList {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 0;
+    }
+
+    .note-item {
+      padding: 8px 14px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.12s;
+    }
+    .note-item:hover { background: var(--th-bg-hover); }
+    .note-item.active {
+      background: rgba(var(--th-accent-rgb),0.1);
+      border-left-color: var(--th-accent);
+    }
+    .note-item-title {
+      font-size: 12px; font-weight: 500;
+      color: var(--th-text-dim);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .note-item.active .note-item-title { color: var(--th-text); }
+    .note-item-preview {
+      font-size: 10px; color: var(--th-border-bright);
+      margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .notes-empty {
+      padding: 24px 14px;
+      color: var(--th-text-dim); font-size: 11px;
+      text-align: center; line-height: 1.8;
+    }
+
+    #newNoteBtn {
+      margin: 8px;
+      height: 32px;
+      background: var(--th-btn-bg);
+      border: 1px solid var(--th-btn-border);
+      border-radius: var(--th-radius-md);
+      color: var(--th-btn-color);
+      cursor: pointer;
+      font-family: var(--th-font);
+      font-size: 11px; font-weight: 500;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    #newNoteBtn:hover {
+      background: rgba(var(--th-accent-rgb),0.14);
+      border-color: rgba(var(--th-accent-rgb),0.28);
+    }
+
+    /* ══ EDITOR PANE ════════════════════════════════════════ */
+    #editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Title row */
+    #editorHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--th-border);
+      flex-shrink: 0;
+      background: var(--th-bg);
+    }
+
+    #noteTitle {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--th-text);
+      font-family: var(--th-font);
+      font-size: 13px; font-weight: 500;
+      padding: 3px 0;
+    }
+    #noteTitle::placeholder { color: var(--th-text-dim); }
+
+    #deleteNoteBtn, #downloadNoteBtn {
+      width: 26px; height: 26px;
+      background: transparent;
+      border: none; border-radius: 4px;
+      color: #1e3a58;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    #deleteNoteBtn:hover   { background: rgba(255,77,106,0.12); color: #ff4d6a; }
+    #downloadNoteBtn:hover { background: rgba(59,158,255,0.10); color: #4a9edd; }
+
+    #saveStatus {
+      font-size: 10px; letter-spacing: 0.8px;
+      flex-shrink: 0;
+      min-width: 62px; text-align: right;
+      color: #1e3a58;
+    }
+    #saveStatus.saved   { color: #00e5a0; }
+    #saveStatus.unsaved { color: #ffaa33; }
+
+    /* ── Toolbar ──────────────────────────────────────────── */
+    #toolbar {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 5px 10px;
+      background: var(--th-bg);
+      border-bottom: 1px solid var(--th-border);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .tb-sep {
+      width: 1px; height: 20px;
+      background: var(--th-border);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .tb-btn {
+      width: 28px; height: 26px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--th-radius-sm);
+      color: var(--th-text-dim);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-family: var(--th-font);
+      transition: all 0.12s;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .tb-btn:hover  { background: var(--th-bg-hover); border-color: rgba(var(--th-accent-rgb),0.15); color: var(--th-text-mid); }
+    .tb-btn.active { background: rgba(var(--th-accent-rgb),0.16); border-color: rgba(var(--th-accent-rgb),0.32); color: var(--th-accent); }
+
+    .tb-select {
+      height: 26px;
+      background: var(--th-bg);
+      border: 1px solid var(--th-border);
+      border-radius: var(--th-radius-sm);
+      color: var(--th-text-dim);
+      font-family: var(--th-font);
+      font-size: 11px;
+      padding: 0 6px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.12s;
+    }
+    .tb-select:hover  { border-color: rgba(var(--th-accent-rgb),0.25); color: var(--th-text-mid); }
+    .tb-select option { background: var(--th-bg-panel); color: var(--th-text-mid); }
+
+    .tb-color {
+      width: 26px; height: 26px;
+      border: 1px solid #0e1e30;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px;
+      background: transparent;
+      flex-shrink: 0;
+    }
+    .tb-color::-webkit-color-swatch-wrapper { padding: 0; }
+    .tb-color::-webkit-color-swatch { border: none; border-radius: 2px; }
+
+    /* ── Content area ─────────────────────────────────────── */
+    #editorScroll {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--th-bg-panel);
+    }
+
+    #noteArea {
+      min-height: 100%;
+      outline: none;
+      color: var(--th-text-mid);
+      font-family: var(--th-font);
+      font-size: 14px;
+      line-height: 1.75;
+      padding: 24px 36px;
+      caret-color: var(--th-accent);
+    }
+
+    #noteArea:empty::before {
+      content: attr(data-placeholder);
+      color: #132030;
+      pointer-events: none;
+    }
+
+    /* Rich text typography */
+    #noteArea h1 {
+      font-size: 26px; font-weight: 700;
+      color: #d0e8ff;
+      margin: 0 0 10px;
+      line-height: 1.25;
+      border-bottom: 1px solid #0e1e30;
+      padding-bottom: 8px;
+    }
+    #noteArea h2 {
+      font-size: 20px; font-weight: 600;
+      color: #c0d8f0;
+      margin: 20px 0 8px;
+      line-height: 1.3;
+    }
+    #noteArea h3 {
+      font-size: 16px; font-weight: 600;
+      color: #8ab8d8;
+      margin: 16px 0 6px;
+    }
+    #noteArea p  { margin: 0 0 4px; min-height: 1em; }
+    #noteArea div { min-height: 1em; }
+    #noteArea b, #noteArea strong { color: #d0e8ff; }
+    #noteArea i, #noteArea em     { color: #9ac4de; }
+    #noteArea u  { text-decoration-color: rgba(59,158,255,0.5); }
+    #noteArea s  { color: #3a6080; }
+
+    #noteArea a {
+      color: #3b9eff;
+      text-decoration: underline;
+      text-decoration-color: rgba(59,158,255,0.4);
+      position: relative;
+    }
+    /* Ctrl held — show pointer on links */
+    body.ctrl-held #noteArea a {
+      cursor: pointer;
+      text-decoration-color: rgba(59,158,255,0.9);
+    }
+
+    /* Link hover tooltip */
+    #linkTooltip {
+      position: fixed;
+      z-index: 9000;
+      background: #0c1c2e;
+      border: 1px solid #1e3a5a;
+      border-radius: 6px;
+      padding: 5px 10px 5px 9px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #5a8ab0;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      max-width: 340px;
+    }
+    #linkTooltip.show { display: flex; }
+    #linkTooltip i { color: #3b9eff; font-size: 10px; flex-shrink: 0; }
+    #linkTooltip .lt-url {
+      color: #3b9eff;
+      overflow: hidden; text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    #linkTooltip .lt-hint {
+      color: #1e3a58;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Link insert modal */
+    #linkModal {
+      position: fixed; inset: 0;
+      z-index: 8000;
+      background: rgba(3,8,16,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #linkModal.show { display: flex; }
+    .lm-box {
+      background: #0c1c2e;
+      border: 1px solid #1e3a5a;
+      border-radius: 10px;
+      padding: 22px 24px 18px;
+      width: 360px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.7);
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .lm-title {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 2px; color: #3b9eff;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .lm-field { display: flex; flex-direction: column; gap: 5px; }
+    .lm-label { font-size: 10px; letter-spacing: 1.5px; color: #2a4870; text-transform: uppercase; }
+    .lm-input {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid #1e3a5a;
+      border-radius: 5px;
+      color: #b0cce8;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .lm-input:focus { border-color: rgba(59,158,255,0.5); }
+    .lm-input::placeholder { color: #1e3a58; }
+    .lm-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 2px; }
+    .lm-btn {
+      height: 32px; padding: 0 16px;
+      border: 1px solid;
+      border-radius: 5px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lm-btn-confirm {
+      background: rgba(59,158,255,0.12);
+      border-color: rgba(59,158,255,0.3);
+      color: #3b9eff;
+    }
+    .lm-btn-confirm:hover {
+      background: rgba(59,158,255,0.22);
+      border-color: rgba(59,158,255,0.55);
+    }
+    .lm-btn-cancel {
+      background: transparent;
+      border-color: #1e3a5a;
+      color: #3a607a;
+    }
+    .lm-btn-cancel:hover { border-color: #3a607a; color: #6a9ac0; }
+
+    #noteArea ul, #noteArea ol {
+      padding-left: 22px;
+      margin: 4px 0 8px;
+    }
+    #noteArea li { margin: 2px 0; }
+    #noteArea ul li::marker { color: #3b9eff; }
+    #noteArea ol li::marker { color: #3b9eff; font-weight: 600; }
+
+    #noteArea blockquote {
+      border-left: 3px solid rgba(59,158,255,0.35);
+      margin: 8px 0;
+      padding: 4px 0 4px 14px;
+      color: #5a8ab0;
+      font-style: italic;
+    }
+
+    #noteArea hr {
+      border: none;
+      border-top: 1px solid #0e1e30;
+      margin: 16px 0;
+    }
+
+    #noteArea code {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid #0e1e30;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #00e5a0;
+    }
+
+    /* ── Status bar ───────────────────────────────────────── */
+    #statusBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 14px;
+      background: #060f18;
+      border-top: 1px solid #0e1e30;
+      font-size: 10px; color: #1e3a5a;
+      letter-spacing: 0.4px;
+      flex-shrink: 0;
+    }
+
+    /* Scrollbars */
+    #notesList::-webkit-scrollbar    { width: 3px; }
+    #editorScroll::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track  { background: transparent; }
+    ::-webkit-scrollbar-thumb  { background: #1a3050; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b9eff; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ SIDEBAR ═════════════════════════════════════════════ -->
+  <div id="sidebar">
+    <div id="sidebarTitle">Poznámky</div>
+    <div id="notesList"></div>
+    <button id="newNoteBtn">+ Nová poznámka</button>
+  </div>
+
+  <!-- ══ EDITOR ══════════════════════════════════════════════ -->
+  <div id="editor">
+
+    <!-- Title row -->
+    <div id="editorHeader">
+      <input id="noteTitle" type="text" placeholder="Název poznámky"
+             spellcheck="false" autocomplete="off" />
+      <button id="downloadNoteBtn" title="Stáhnout jako TXT">
+        <i class="fa-solid fa-file-arrow-down"></i>
+      </button>
+      <button id="deleteNoteBtn" title="Smazat poznámku">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+      <span id="saveStatus">—</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div id="toolbar">
+
+      <!-- Heading -->
+      <select class="tb-select" id="tbHeading" title="Styl odstavce">
+        <option value="">Odstavec</option>
+        <option value="h1">Nadpis 1</option>
+        <option value="h2">Nadpis 2</option>
+        <option value="h3">Nadpis 3</option>
+      </select>
+
+      <div class="tb-sep"></div>
+
+      <!-- Inline -->
+      <button class="tb-btn" data-cmd="bold"          title="Tučné (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+      <button class="tb-btn" data-cmd="italic"        title="Kurzíva (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+      <button class="tb-btn" data-cmd="underline"     title="Podtržení (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+      <button class="tb-btn" data-cmd="strikeThrough" title="Přeškrtnutí"><i class="fa-solid fa-strikethrough"></i></button>
+
+      <div class="tb-sep"></div>
+
+      <!-- Alignment -->
+      <button class="tb-btn" data-cmd="justifyLeft"   title="Zarovnat vlevo"><i class="fa-solid fa-align-left"></i></button>
+      <button class="tb-btn" data-cmd="justifyCenter" title="Centrovat"><i class="fa-solid fa-align-center"></i></button>
+      <button class="tb-btn" data-cmd="justifyRight"  title="Zarovnat vpravo"><i class="fa-solid fa-align-right"></i></button>
+
+      <div class="tb-sep"></div>
+
+      <!-- Lists -->
+      <button class="tb-btn" data-cmd="insertUnorderedList" title="Odrážkový seznam"><i class="fa-solid fa-list-ul"></i></button>
+      <button class="tb-btn" data-cmd="insertOrderedList"   title="Číslovaný seznam"><i class="fa-solid fa-list-ol"></i></button>
+
+      <div class="tb-sep"></div>
+
+      <!-- Blocks -->
+      <button class="tb-btn" id="tbBlockquote" title="Citace"><i class="fa-solid fa-quote-left"></i></button>
+      <button class="tb-btn" id="tbCode"       title="Inline kód"><i class="fa-solid fa-code"></i></button>
+      <button class="tb-btn" id="tbHr"         title="Vložit oddělovač"><i class="fa-solid fa-minus"></i></button>
+
+      <div class="tb-sep"></div>
+
+      <!-- Link -->
+      <button class="tb-btn" id="tbLink"       title="Vložit odkaz"><i class="fa-solid fa-link"></i></button>
+      <button class="tb-btn" data-cmd="unlink" title="Odebrat odkaz"><i class="fa-solid fa-link-slash"></i></button>
+
+      <div class="tb-sep"></div>
+
+      <!-- Text colour -->
+      <input type="color" class="tb-color" id="tbColor" value="#b0cce8" title="Barva textu" />
+
+      <div class="tb-sep"></div>
+
+      <!-- Undo / Redo -->
+      <button class="tb-btn" data-cmd="undo" title="Zpět (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="tb-btn" data-cmd="redo" title="Znovu (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+
+    </div>
+
+    <!-- Scrollable content -->
+    <div id="editorScroll">
+      <div id="noteArea"
+           contenteditable="true"
+           spellcheck="false"
+           data-placeholder="Začněte psát…"></div>
+    </div>
+
+    <!-- Status bar -->
+    <div id="statusBar">
+      <span id="wordCount">0 slov · 0 znaků</span>
+      <span id="lastSaved"></span>
+    </div>
+
+  </div>
+
+  <!-- ══ LINK TOOLTIP ════════════════════════════════════════ -->
+  <div id="linkTooltip">
+    <i class="fa-solid fa-link"></i>
+    <span class="lt-url" id="linkTooltipUrl"></span>
+    <span class="lt-hint">Ctrl + klik</span>
+  </div>
+
+  <!-- ══ LINK MODAL ══════════════════════════════════════════ -->
+  <div id="linkModal">
+    <div class="lm-box">
+      <div class="lm-title"><i class="fa-solid fa-link"></i> Vložit odkaz</div>
+      <div class="lm-field">
+        <label class="lm-label" for="lmText">Text odkazu</label>
+        <input id="lmText" class="lm-input" type="text"
+               placeholder="Zobrazovaný text (prázdné = zachovat výběr)" autocomplete="off" />
+      </div>
+      <div class="lm-field">
+        <label class="lm-label" for="lmUrl">URL</label>
+        <input id="lmUrl" class="lm-input" type="url"
+               placeholder="https://" autocomplete="off" />
+      </div>
+      <div class="lm-actions">
+        <button class="lm-btn lm-btn-cancel" id="lmCancel">Zrušit</button>
+        <button class="lm-btn lm-btn-confirm" id="lmConfirm">Vložit</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+    'use strict';
+
+    const STORAGE_KEY  = 'saspHub_notepad_v1';
+    let notes          = [];
+    let activeId       = null;
+    let saveTimer      = null;
+    let _suppressInput = false;
+
+    /* ── Storage ────────────────────────────────────────────── */
+    function loadNotes() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        notes = raw ? JSON.parse(raw) : [];
+      } catch (e) { notes = []; }
+      if (notes.length === 0) createNote(false);
+    }
+
+    function saveNotes() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notes)); } catch (e) {}
+    }
+
+    /* ── CRUD ───────────────────────────────────────────────── */
+    function createNote(select = true) {
+      const id   = Date.now().toString();
+      const note = { id, title: '', content: '', updated: new Date().toISOString() };
+      notes.unshift(note);
+      saveNotes();
+      renderList();
+      if (select) selectNote(id);
+      return id;
+    }
+
+    function deleteNote() {
+      if (!activeId) return;
+      const idx = notes.findIndex(n => n.id === activeId);
+      if (idx === -1) return;
+      notes.splice(idx, 1);
+      saveNotes();
+      activeId = null;
+      if (notes.length === 0) createNote(true);
+      else selectNote(notes[0].id);
+      renderList();
+    }
+
+    function selectNote(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      activeId = id;
+      _suppressInput = true;
+      document.getElementById('noteTitle').value    = note.title;
+      document.getElementById('noteArea').innerHTML = note.content;
+      _suppressInput = false;
+      setSaveStatus('saved');
+      updateStats();
+      updateLastSaved(note.updated);
+      renderList();
+    }
+
+    /* ── Sidebar ────────────────────────────────────────────── */
+    function renderList() {
+      const container = document.getElementById('notesList');
+      if (notes.length === 0) {
+        container.innerHTML = '<div class="notes-empty">Žádné poznámky</div>';
+        return;
+      }
+      container.innerHTML = notes.map(note => {
+        const title   = note.title || 'Bez názvu';
+        const preview = (note.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        return `<div class="note-item${note.id === activeId ? ' active' : ''}" data-id="${esc(note.id)}">
+          <div class="note-item-title">${esc(title)}</div>
+          <div class="note-item-preview">${esc(preview.slice(0, 55))}</div>
+        </div>`;
+      }).join('');
+      container.querySelectorAll('.note-item').forEach(el => {
+        el.addEventListener('click', () => selectNote(el.dataset.id));
+      });
+    }
+
+    /* ── Auto-save ──────────────────────────────────────────── */
+    function scheduleAutoSave() {
+      if (_suppressInput) return;
+      clearTimeout(saveTimer);
+      setSaveStatus('unsaved');
+      saveTimer = setTimeout(commitSave, 800);
+    }
+
+    function commitSave() {
+      if (!activeId) return;
+      const note = notes.find(n => n.id === activeId);
+      if (!note) return;
+      note.title   = document.getElementById('noteTitle').value;
+      note.content = document.getElementById('noteArea').innerHTML;
+      note.updated = new Date().toISOString();
+      saveNotes();
+      setSaveStatus('saved');
+      updateLastSaved(note.updated);
+      renderList();
+    }
+
+    function setSaveStatus(state) {
+      const el = document.getElementById('saveStatus');
+      if (state === 'saved')   { el.textContent = '✓ Uloženo';   el.className = 'saved';   }
+      if (state === 'unsaved') { el.textContent = '● Ukládání…'; el.className = 'unsaved'; }
+    }
+
+    /* ── Stats ──────────────────────────────────────────────── */
+    function updateStats() {
+      const text  = document.getElementById('noteArea').innerText || '';
+      const chars = text.length;
+      const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+      document.getElementById('wordCount').textContent = `${words} slov · ${chars} znaků`;
+    }
+
+    function updateLastSaved(iso) {
+      if (!iso) return;
+      const dt = new Date(iso);
+      const p  = v => String(v).padStart(2, '0');
+      document.getElementById('lastSaved').textContent =
+        `${p(dt.getDate())}.${p(dt.getMonth()+1)}.${dt.getFullYear()} ${p(dt.getHours())}:${p(dt.getMinutes())}`;
+    }
+
+    /* ── execCommand wrapper ────────────────────────────────── */
+    function exec(cmd, value = null) {
+      document.getElementById('noteArea').focus();
+      // eslint-disable-next-line no-undef
+      document.execCommand(cmd, false, value);
+    }
+
+    /* ── Toolbar state refresh ──────────────────────────────── */
+    function refreshToolbarState() {
+      ['bold','italic','underline','strikeThrough',
+       'justifyLeft','justifyCenter','justifyRight',
+       'insertUnorderedList','insertOrderedList'].forEach(cmd => {
+        const btn = document.querySelector(`[data-cmd="${cmd}"]`);
+        if (btn) btn.classList.toggle('active', document.queryCommandState(cmd));
+      });
+
+      const block = document.queryCommandValue('formatBlock').toLowerCase().replace(/^<|>$/g,'');
+      const sel   = document.getElementById('tbHeading');
+      sel.value   = ['h1','h2','h3'].includes(block) ? block : '';
+    }
+
+    /* ── Toolbar events ─────────────────────────────────────── */
+
+    // Heading select
+    document.getElementById('tbHeading').addEventListener('change', function () {
+      exec('formatBlock', this.value || 'div');
+      scheduleAutoSave();
+    });
+
+    // Generic exec buttons (mousedown = no focus loss)
+    document.querySelectorAll('.tb-btn[data-cmd]').forEach(btn => {
+      btn.addEventListener('mousedown', e => {
+        e.preventDefault();
+        exec(btn.dataset.cmd);
+        refreshToolbarState();
+        scheduleAutoSave();
+      });
+    });
+
+    // Blockquote
+    document.getElementById('tbBlockquote').addEventListener('mousedown', e => {
+      e.preventDefault();
+      exec('formatBlock', 'blockquote');
+      scheduleAutoSave();
+    });
+
+    // Inline code: wrap selection in <code>
+    document.getElementById('tbCode').addEventListener('mousedown', e => {
+      e.preventDefault();
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount && !sel.isCollapsed) {
+        try {
+          const range = sel.getRangeAt(0);
+          const code  = document.createElement('code');
+          range.surroundContents(code);
+          sel.removeAllRanges();
+        } catch (_) {}
+      }
+      scheduleAutoSave();
+    });
+
+    // HR
+    document.getElementById('tbHr').addEventListener('mousedown', e => {
+      e.preventDefault();
+      exec('insertHorizontalRule');
+      scheduleAutoSave();
+    });
+
+    // Link — modal
+    let _savedRange = null;
+
+    function openLinkModal() {
+      // Save current selection before the modal steals focus
+      const sel = window.getSelection();
+      _savedRange = (sel && sel.rangeCount) ? sel.getRangeAt(0).cloneRange() : null;
+
+      // Pre-fill text field with selected text
+      const selText = _savedRange && !_savedRange.collapsed
+        ? _savedRange.toString().trim() : '';
+      document.getElementById('lmText').value = selText;
+      document.getElementById('lmUrl').value  = '';
+
+      document.getElementById('linkModal').classList.add('show');
+      document.getElementById('lmUrl').focus();
+    }
+
+    function closeLinkModal() {
+      document.getElementById('linkModal').classList.remove('show');
+      _savedRange = null;
+    }
+
+    function confirmLink() {
+      const url  = document.getElementById('lmUrl').value.trim();
+      if (!url) { document.getElementById('lmUrl').focus(); return; }
+      const text = document.getElementById('lmText').value.trim();
+
+      // Restore the saved selection
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      if (_savedRange) sel.addRange(_savedRange);
+
+      document.getElementById('noteArea').focus();
+
+      if (text) {
+        // Custom text provided — always replace contents with new linked text
+        const a = document.createElement('a');
+        a.href = url;
+        a.textContent = text;
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(a);
+        // move caret after the link
+        range.setStartAfter(a);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } else {
+        // Wrap existing selection in a link
+        exec('createLink', url);
+      }
+
+      closeLinkModal();
+      scheduleAutoSave();
+    }
+
+    document.getElementById('tbLink').addEventListener('mousedown', e => {
+      e.preventDefault();
+      openLinkModal();
+    });
+    document.getElementById('lmConfirm').addEventListener('click', confirmLink);
+    document.getElementById('lmCancel').addEventListener('click', closeLinkModal);
+    document.getElementById('linkModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('linkModal')) closeLinkModal();
+    });
+    document.getElementById('lmUrl').addEventListener('keydown', e => {
+      if (e.key === 'Enter') confirmLink();
+      if (e.key === 'Escape') closeLinkModal();
+    });
+    document.getElementById('lmText').addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLinkModal();
+    });
+
+    // Text colour
+    document.getElementById('tbColor').addEventListener('input', function () {
+      exec('foreColor', this.value);
+      scheduleAutoSave();
+    });
+
+    // Sync active states on selection change
+    document.addEventListener('selectionchange', refreshToolbarState);
+
+    /* ── Content area events ────────────────────────────────── */
+    document.getElementById('noteArea').addEventListener('input', () => {
+      updateStats();
+      scheduleAutoSave();
+    });
+
+    // Ctrl+click on a link → open in new window
+    document.getElementById('noteArea').addEventListener('click', e => {
+      if (!e.ctrlKey) return;
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      e.preventDefault();
+      window.open(link.href, '_blank', 'noopener,noreferrer');
+    });
+
+    // Link hover tooltip
+    const _tooltip  = document.getElementById('linkTooltip');
+    const _tooltipUrl = document.getElementById('linkTooltipUrl');
+    let _tooltipTimer = null;
+
+    document.getElementById('noteArea').addEventListener('mouseover', e => {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      clearTimeout(_tooltipTimer);
+      _tooltipUrl.textContent = link.href.length > 45
+        ? link.href.slice(0, 42) + '…' : link.href;
+      _tooltip.classList.add('show');
+      positionTooltip(e);
+    });
+    document.getElementById('noteArea').addEventListener('mousemove', e => {
+      if (e.target.closest('a[href]')) positionTooltip(e);
+    });
+    document.getElementById('noteArea').addEventListener('mouseout', e => {
+      if (!e.target.closest('a[href]')) return;
+      _tooltipTimer = setTimeout(() => _tooltip.classList.remove('show'), 120);
+    });
+    function positionTooltip(e) {
+      const tw = _tooltip.offsetWidth || 240;
+      const th = _tooltip.offsetHeight || 30;
+      let x = e.clientX + 14;
+      let y = e.clientY + 20;
+      if (x + tw > window.innerWidth  - 8) x = e.clientX - tw - 8;
+      if (y + th > window.innerHeight - 8) y = e.clientY - th - 8;
+      _tooltip.style.left = x + 'px';
+      _tooltip.style.top  = y + 'px';
+    }
+
+    // Track Ctrl key for cursor style
+    document.addEventListener('keydown', e => { if (e.key === 'Control') document.body.classList.add('ctrl-held'); });
+    document.addEventListener('keyup',   e => { if (e.key === 'Control') document.body.classList.remove('ctrl-held'); });
+
+    // Tab → 4 spaces
+    document.getElementById('noteArea').addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        exec('insertHTML', '\u00a0\u00a0\u00a0\u00a0');
+      }
+    });
+
+    // Paste: strip external styles, keep HTML structure
+    document.getElementById('noteArea').addEventListener('paste', e => {
+      e.preventDefault();
+      const html  = e.clipboardData.getData('text/html');
+      const plain = e.clipboardData.getData('text/plain');
+      if (html) {
+        const clean = html
+          .replace(/\sstyle="[^"]*"/gi, '')
+          .replace(/\sclass="[^"]*"/gi, '');
+        exec('insertHTML', clean);
+      } else {
+        exec('insertText', plain);
+      }
+    });
+
+    /* ── Sidebar & header events ────────────────────────────── */
+    document.getElementById('noteTitle').addEventListener('input', scheduleAutoSave);
+    document.getElementById('newNoteBtn').addEventListener('click', () => createNote(true));
+    document.getElementById('deleteNoteBtn').addEventListener('click', () => deleteNote());
+
+    document.getElementById('downloadNoteBtn').addEventListener('click', () => {
+      if (!activeId) return;
+      const note = notes.find(n => n.id === activeId);
+      if (!note) return;
+      const area  = document.getElementById('noteArea');
+      const text  = area.innerText || area.textContent;
+      const title = (note.title || 'poznamka').replace(/[^a-z0-9čšžýáíéůúěďťňóA-Z]/gi, '_').slice(0, 60);
+      const blob  = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url   = URL.createObjectURL(blob);
+      const a     = document.createElement('a');
+      a.href      = url;
+      a.download  = title + '.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    /* ── Helpers ────────────────────────────────────────────── */
+    function esc(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    loadNotes();
+    if (notes.length > 0) selectNote(notes[0].id);
+
+    /* ── Hub messages ───────────────────────────────────────── */
+    window.addEventListener('message', e => {
+      if (e.data?.type === 'focusNote' && e.data.id) {
+        loadNotes();
+        selectNote(e.data.id);
+      }
+      if (e.data?.type === 'reloadNotes') {
+        loadNotes();
+        renderList();
+      }
+    });
+  </script>
+  <script src="../../js/themes.js"></script>
+
+</body>
+</html>
